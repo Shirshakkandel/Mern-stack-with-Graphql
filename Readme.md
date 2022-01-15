@@ -152,7 +152,22 @@ mutation createUser($userNew:UserInput!){
 
 # ``5)Add MongoDB and creating Model``
 
-``js
+```js
+// Connect to MongoDB
+mongoose
+  .connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('databse connected...')
+  })
+  .catch(err => console.log(err))
 
+  
+//import models here
+import './models/User.js'
+import './models/Quote.js'
+import resolvers from './resolvers.js'
 
 ```

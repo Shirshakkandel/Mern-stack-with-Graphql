@@ -3,7 +3,8 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-co
 //mongodb+srv://shirshak:%40info123@cluster0.anmrj.mongodb.net/graphql?retryWrites=true&w=majority
 import typeDefs from './schemaGql.js'
 import mongoose from 'mongoose'
-import { MONGO_URL } from './config.js'
+import jwt from 'jsonwebtoken'
+import { JWT_SECRET, MONGO_URL } from './config.js'
 
 // Connect to MongoDB
 mongoose
@@ -21,10 +22,19 @@ import './models/User.js'
 import './models/Quote.js'
 import resolvers from './resolvers.js'
 
+const context = ({ req }) => {
+  const { authorization } = req.headers
+  if (authorization) {
+    const { userId } = jwt.verify(authorization, JWT_SECRET)
+    return { userId }
+  }
+}
+
 // Create the GraphQL server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context,
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
 })
 // Start the server

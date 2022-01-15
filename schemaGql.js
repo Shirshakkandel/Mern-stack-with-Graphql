@@ -4,10 +4,20 @@ import { gql } from 'apollo-server'
 const typeDefs = gql`
   type Query {
     users: [User]
-    quotes: [Quote]
+    quotes: [QuoteWithName]
     # we identify the user by their ID
     user(id: ID!): User
     iquote(by: ID!): [Quote]
+  }
+
+  type QuoteWithName {
+    name: String
+    by: IdName
+  }
+
+  type IdName {
+    _id: String
+    firstName: String
   }
 
   #User type
@@ -34,6 +44,7 @@ const typeDefs = gql`
   type Mutation {
     signupUser(userNew: UserInput!): User
     signinUser(userSignin: UserSigninInput!): Token
+    createQuote(name: String!): String
   }
 
   type Token {
